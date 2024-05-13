@@ -31,17 +31,19 @@ a:hover {
 
 body {
   margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
-  height: 100vh;
-  position: relative;
   background-color: #282828;
   color: #fff;
   user-select: none;
   font-family: 'Fira Code';
 }
 #app {
-  position: absolute;
-  width: 100%;
+  position: relative;
   height: 100%;
   overflow: auto;
 }
