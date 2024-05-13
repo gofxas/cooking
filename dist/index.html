@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no" />
+  <title>Cooktiming</title>
+  <script type="module" crossorigin src="/assets/index-xagi2-Hf.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-b2M0ztg2.css">
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+<script>
+  const setSize = function () {
+    const width = window.innerWidth;
+    if (width <= 375) {
+      document.querySelector('html').style.fontSize = '20px'
+    } else if (width >= 525) {
+      document.querySelector('html').style.fontSize = '28px'
+    } else {
+      let s = (width - 375) * 0.0533 + 20;
+      document.querySelector('html').style.fontSize = s + 'px'
+    }
+  };
+  window.onresize = function () {
+    setSize()
+  };
+  setSize();
+</script>
+
+</html>
