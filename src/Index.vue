@@ -7,23 +7,24 @@
         v-for="timer in timers"
         :timer="timer"
         :key="timer.id"
+        :ding="Base.ding"
         @reload="reloadHandler"
         @delete="deleteHandler"
       />
     </TransitionGroup>
-    <Creator 
-    @setting="settingHandler"
-    @create="newTimerHandler" />
+    <Creator @setting="settingHandler" @create="newTimerHandler" />
   </div>
 </template>
 <script>
 import Creator from "./components/creator.vue";
 import Timer from "./components/timer.vue";
+import Base from "./state";
 export default {
   name: "App",
   components: { Creator, Timer },
   data() {
     return {
+      Base,
       timers: [],
       timerout: null,
     };
@@ -31,7 +32,7 @@ export default {
   computed: {},
   methods: {
     settingHandler() {
-      this.$router.push('/setting')
+      this.$router.push("/setting");
     },
     newTimerHandler(object) {
       this.timers.push(object);
@@ -113,6 +114,6 @@ export default {
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  transform: scaleY(.7);
+  transform: scaleY(0.7);
 }
 </style>

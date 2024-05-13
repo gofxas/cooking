@@ -1,0 +1,14 @@
+{
+    "name": "kitchen Timer",
+    "short_name": "Timer",
+    "start_url": "/",
+    "theme_color": "#282828",
+    "background_color": "#282828",
+    "display": "standalone",
+    "orientation": "natural",
+    "icons": [{
+      "src": "Timer.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml"
+    }]
+  }

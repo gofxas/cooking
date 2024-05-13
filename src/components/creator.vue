@@ -12,24 +12,11 @@
         <h1>{{ format_time }}</h1>
         <div class="types">
           <span
-            :class="this.name === '煮' ? 'active' : ''"
-            @click="this.name = '煮'"
-            >煮</span
-          >
-          <span
-            :class="this.name === '炸' ? 'active' : ''"
-            @click="this.name = '炸'"
-            >炸</span
-          >
-          <span
-            :class="this.name === '蒸' ? 'active' : ''"
-            @click="this.name = '蒸'"
-            >蒸</span
-          >
-          <span
-            :class="this.name === '炖' ? 'active' : ''"
-            @click="this.name = '炖'"
-            >炖</span
+            v-for="(name, index) in Base.types"
+            :key="index"
+            :class="this.name === name ? 'active' : ''"
+            @click="this.name = name"
+            >{{ name }}</span
           >
         </div>
       </div>
@@ -58,11 +45,13 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import colors from "../colors";
+import Base from "../state";
 dayjs.extend(duration);
 export default {
   name: "creator",
   data() {
     return {
+      Base,
       start_x: 0,
       start_y: 0,
       move_x: 0,
@@ -76,7 +65,7 @@ export default {
       format_time: "",
       time: 0,
       color: "",
-      name: "煮",
+      name: Base.types[0],
     };
   },
   methods: {
@@ -220,7 +209,7 @@ export default {
       this.show_detail_panel = false;
       this.time = 0;
       this.format_time = "";
-      this.name = "煮";
+      this.name = Base.types[0];
     },
   },
 };
@@ -231,6 +220,8 @@ export default {
   width: 100%;
   overflow: hidden;
   height: var(--creator-height);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5) inset,
+    0 4px 6px -4px rgb(0 0 0 / 0.15) inset;
   box-sizing: border-box;
 }
 .creator-main {
@@ -239,16 +230,17 @@ export default {
   box-sizing: border-box;
   padding: 0 0.5rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   z-index: 1;
   //   transition: 0.3s;
-  background-color: #696969;
+  background-color: #282828;
   background-image: linear-gradient(
     270deg,
-    hsla(0, 0%, 100%, 0.5),
+    hsla(0, 0%, 100%, 0),
     hsla(0, 0%, 100%, 0.3)
   );
+  font-size: 0.7rem;
   &.animation {
     transition: 0.3s;
   }
@@ -270,6 +262,8 @@ export default {
 .types {
   display: flex;
   gap: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: center;
   span {
     width: 4rem;
     height: 2rem;

@@ -11,53 +11,42 @@
     }"
   >
     <div class="delete-triger">
-      <span>删除</span>
-      <span class="confirm-notify" v-if="confirm_notify">（松开确认）</span>
+      <span>{{ del_text }}</span>
     </div>
     <div class="redo-triger">
-      <span>重新开始</span>
-      <span class="confirm-notify" v-if="confirm_notify">（松开确认）</span>
+      <span>{{ edit_text }}</span>
     </div>
     <div
-      :class="[animation ? 'animation' : '', 'timer-item']"
+      :class="[animation ? 'animation' : '', 'slide-item']"
       @touchstart="startHandler"
       @touchmove="moveHandler"
       @touchend="endHandler"
       :style="{
-        backgroundColor: timer.backgroundColor,
         transform: is_swip_x ? `translateX(${move_x}px)` : 'none',
       }"
     >
-      <span>{{ timer.name }}</span>
-      <span>{{ rest }}</span>
+      <slot />
     </div>
   </div>
 </template>
-<script>
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-import { Howl } from "howler";
-const sound = new Howl({
-  src: [`/sound/ding.mp3`],
-  html5: true,
-  volume: 1,
-});
-dayjs.extend(duration);
+  <script>
 export default {
-  name: "timer",
+  name: "slideItem",
   props: {
-    ding: {
-      default: true,
-      type: Boolean,
+    del_text: {
+      default: "Delete",
+      type: String,
     },
-    timer: {
-      default: () => ({
-        start: Number,
-        duration: Number,
-        name: String,
-        id: String,
-      }),
-      type: Object,
+    edit_text: {
+      default: "Edit",
+      type: String,
+    },
+    left_threshold: {
+      default: 100,
+      type: Number,
+    },
+    right_threshold: {
+      default: 0,
     },
   },
   data() {
@@ -71,32 +60,7 @@ export default {
       direction: "normal", // right| left |normal
       animation: false,
       is_swip_x: false,
-      confirm_notify: false,
     };
-  },
-  watch: {
-    timer: {
-      handler(o, n) {
-        // console.log(o.rest, n.rest);
-        if (n.rest == 0 && this.ding) {
-          sound.play();
-        }
-      },
-      deep: true,
-    },
-  },
-  computed: {
-    rest() {
-      const d = dayjs.duration(this.timer.rest);
-      const h =
-        Math.floor(d.asHours()) < 10
-          ? "0" + Math.floor(d.asHours())
-          : Math.floor(d.asHours());
-      const m = d.minutes() < 10 ? "0" + d.minutes() : d.minutes();
-      const s = d.seconds() < 10 ? "0" + d.seconds() : d.seconds();
-      //   const ms = d.milliseconds();
-      return `${h}:${m}:${s}`;
-    },
   },
   methods: {
     startHandler(e) {
@@ -110,15 +74,12 @@ export default {
       const [touch] = e.targetTouches;
       const { clientX, clientY } = touch;
       this.move_x =
-        clientX - this.start_x > 180
-          ? 180
-          : clientX - this.start_x < -180
-          ? -180
+        clientX - this.start_x > this.right_threshold
+          ? this.right_threshold
+          : clientX - this.start_x < -this.left_threshold
+          ? -this.left_threshold
           : clientX - this.start_x;
       this.move_y = clientY - this.start_y;
-      if (Math.abs(this.move_x) > 100) {
-        this.confirm_notify = true;
-      }
       if (this.move_x > 0) {
         this.direction = "right";
       }
@@ -131,23 +92,24 @@ export default {
       }
     },
     endHandler(e) {
-      if (this.move_x > 100) {
-        // todo  delete
-        console.log("delete");
-        this.$emit("delete", this.timer.id);
+      if (
+        this.move_x >
+        (this.right_threshold - 20 > 0 ? this.right_threshold - 20 : 0)
+      ) {
+        this.$emit("delete");
       }
-      if (this.move_x < -100) {
-        // todo  redo
-        this.timer.start = new Date().getTime();
-        this.$emit("reload");
+      if (
+        this.move_x <
+        (this.left_threshold - 20 > 0 ? 20 - this.left_threshold : 0)
+      ) {
+        this.$emit("edit");
       }
       this.animation = true;
       (this.start_x = 0),
         (this.start_y = 0),
         (this.move_x = 0),
         (this.move_y = 0),
-        (this.is_swip_x = false),
-        (this.confirm_notify = false);
+        (this.is_swip_x = false);
       setTimeout(() => {
         this.animation = false;
         this.direction = "normal";
@@ -161,7 +123,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
+  <style lang="less" scoped>
 .timer-wrapper {
   position: relative;
   overflow: hidden;
@@ -190,7 +152,7 @@ export default {
 .redo-triger {
   right: 0;
 }
-.timer-item {
+.slide-item {
   position: relative;
   height: 3rem;
   box-sizing: border-box;
@@ -199,7 +161,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   z-index: 1;
-  //   transition: 0.3s;
+  background-color: #282828;
   background-image: linear-gradient(
     270deg,
     hsla(0, 0%, 100%, 0),

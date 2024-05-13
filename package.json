@@ -11,6 +11,8 @@
   "dependencies": {
     "autoprefixer": "^10.4.16",
     "dayjs": "^1.11.11",
+    "howler": "^2.2.4",
+    "lodash": "^4.17.21",
     "vue": "^3.3.11",
     "vue-router": "^4.3.2"
   },
