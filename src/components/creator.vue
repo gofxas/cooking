@@ -191,9 +191,10 @@ export default {
       this.resetTime(this.time);
     },
     timeoutCreateTimer() {
+      const auto_creator_time = 5000
       const timer_instance = {
-        start: new Date().getTime(),
-        duration: this.time,
+        start: new Date().getTime() - auto_creator_time,
+        duration: this.time + auto_creator_time,
         rest: 0,
         name: this.name,
         backgroundColor: this.color,
