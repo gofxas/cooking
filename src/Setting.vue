@@ -9,7 +9,8 @@
         @edit="editHandler(index)"
         v-for="(t, index) in Base.types"
         :key="index"
-        :edit_text="edit != index ? 'Edit' : 'Save'"
+        del_text="删除"
+        :edit_text="edit != index ? '编辑' : '保存'"
       >
         <div v-if="edit != index">
           {{ t }}
@@ -28,7 +29,7 @@
     </div>
     <template v-if="Base.types.length < 8">
       <p class="p-title">创建新标签</p>
-      <SlideItem @edit="newEditHandler" :right_threshold="0" edit_text="Add">
+      <SlideItem @edit="newEditHandler" :right_threshold="0" edit_text="创建">
         <input
           class="editor"
           ref="editor"
@@ -57,7 +58,7 @@
       </div>
     </SlideItem>
     <p class="p-title">首页</p>
-    <SlideItem @edit="goHome" :right_threshold="0" edit_text="GO HOME">
+    <SlideItem @edit="goHome" :right_threshold="0" edit_text="回到首页">
       <div style="flex: 1; text-align: center; font-size: 0.7rem">
         左划回首页
       </div>
@@ -133,12 +134,12 @@ export default {
   box-sizing: border-box;
   padding-left: 0.5rem;
 }
-.sub-title{
+.sub-title {
   box-sizing: border-box;
   padding-left: 0.5rem;
-  font-size: .6rem;
-  margin-bottom: .3rem;
-  margin-top: -.5rem;
+  font-size: 0.6rem;
+  margin-bottom: 0.3rem;
+  margin-top: -0.5rem;
   color: #fff8;
 }
 </style>

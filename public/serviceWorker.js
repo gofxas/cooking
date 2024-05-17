@@ -1,5 +1,5 @@
 const WEBCACHE = "kitchenTimer";
-const CACHE_LIST = ["/"];
+const CACHE_LIST = ["/", "/about/out.webm"];
 const CACHE_FILE_TYPE = [
   "js",
   "css",
@@ -11,6 +11,7 @@ const CACHE_FILE_TYPE = [
   "mp3",
   "wav",
   "mp4",
+  "webm",
   "ttf",
   "woff2",
   "wasm",
