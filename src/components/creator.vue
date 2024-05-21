@@ -115,7 +115,6 @@ export default {
         this.direction = "normal";
       }, 300);
       if (this.direction == "left" && this.move_x < -80) {
-        console.log("setting");
         this.$emit("setting");
       }
 
@@ -130,7 +129,7 @@ export default {
       } else {
         if (this.direction == "right") {
           this.auto_count_out = this.time >= 4 ? 4 : this.time;
-          if (this.auto_count_out > 0) {
+          if (this.auto_count_out > 0 && this.show_detail_panel) {
             this.auto_creator = setInterval(() => {
               this.auto_count_out -= 1;
               this.time -= 1000;
@@ -191,7 +190,7 @@ export default {
       this.resetTime(this.time);
     },
     timeoutCreateTimer() {
-      const auto_creator_time = 5000
+      const auto_creator_time = 5000;
       const timer_instance = {
         start: new Date().getTime() - auto_creator_time,
         duration: this.time + auto_creator_time,
