@@ -10,18 +10,21 @@
         :ding="Base.ding"
         @reload="reloadHandler"
         @delete="deleteHandler"
+        @timeend="timeendHandler"
       />
     </TransitionGroup>
     <Creator @setting="settingHandler" @create="newTimerHandler" />
+    <Timeover ref="timeover"/>
   </div>
 </template>
 <script>
 import Creator from "./components/creator.vue";
 import Timer from "./components/timer.vue";
+import Timeover from "./components/timeover.vue";
 import Base from "./state";
 export default {
   name: "App",
-  components: { Creator, Timer },
+  components: { Creator, Timer, Timeover },
   data() {
     return {
       Base,
@@ -31,6 +34,9 @@ export default {
   },
   computed: {},
   methods: {
+    timeendHandler() {
+      this.$refs.timeover.open()
+    },
     settingHandler() {
       this.$router.push("/setting");
     },

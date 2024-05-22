@@ -1,5 +1,5 @@
 const WEBCACHE = "kitchenTimer";
-const CACHE_LIST = ["/", "/about/out.webm"];
+const CACHE_LIST = ["/", "/sound/ding.mp3", "/about/out.webm"];
 const CACHE_FILE_TYPE = [
   "js",
   "css",
@@ -14,7 +14,6 @@ const CACHE_FILE_TYPE = [
   "webm",
   "ttf",
   "woff2",
-  "wasm",
 ];
 
 function isAcceptFile(url) {
@@ -22,16 +21,7 @@ function isAcceptFile(url) {
   return r.test(url);
 }
 self.addEventListener("activate", function (event) {
-  event.waitUntil(
-    caches.keys().then(function (cacheNames) {
-      cacheNames.map(function (cacheName) {
-        if (WEBCACHE != cacheName) {
-          console.log("Deleting out of date cache:", cacheName);
-          return caches.delete(cacheName);
-        }
-      });
-    })
-  );
+  console.log("ServiceWorker activated.");
 });
 
 self.addEventListener("install", function (event) {
@@ -49,7 +39,7 @@ self.addEventListener("fetch", function (event) {
       if (response !== undefined) {
         return response;
       } else {
-        return fetch(event.request, { cache: "no-store" })
+        return fetch(event.request)
           .then(function (response) {
             let responseClone = response.clone();
             if (method === "POST") {
@@ -58,11 +48,12 @@ self.addEventListener("fetch", function (event) {
             if (!isAcceptFile(url)) {
               return response;
             }
-            if (responseClone.status == 200) {
-              caches.open(WEBCACHE).then(function (cache) {
+            caches.open(WEBCACHE).then(function (cache) {
+              try{
                 cache.put(event.request, responseClone);
-              });
-            }
+              }catch(e) {}
+            });
+            console.log("response cached");
             return response;
           })
           .catch(function (error) {

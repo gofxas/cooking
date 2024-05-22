@@ -36,12 +36,7 @@
 <script>
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { Howl } from "howler";
-const sound = new Howl({
-  src: [`/sound/ding.mp3`],
-  html5: true,
-  volume: 1,
-});
+
 dayjs.extend(duration);
 export default {
   name: "timer",
@@ -72,17 +67,20 @@ export default {
       animation: false,
       is_swip_x: false,
       confirm_notify: false,
+      n: 0,
     };
   },
   watch: {
     timer: {
-      handler(o, n) {
-        // console.log(o.rest, n.rest);
-        if (n.rest == 0 && this.ding) {
-          sound.play();
+      handler(n, o) {
+        if (n.rest == 0 && n.rest != this.n && this.ding) {
+          // playsound();
+          this.$emit("timeend");
         }
+        this.n = n.rest;
       },
       deep: true,
+      immediate: true,
     },
   },
   computed: {

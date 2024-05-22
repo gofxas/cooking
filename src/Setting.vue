@@ -45,16 +45,16 @@
         </div>
       </SlideItem>
     </template>
-    <p class="p-title">提示音？</p>
+    <p class="p-title">提示音？(左划试听5s)</p>
     <SlideItem
-      @edit="Base.ding = true"
+      @edit="switchDing"
       @delete="Base.ding = false"
       :right_threshold="100"
       del_text="关闭"
-      edit_text="打开"
+      edit_text="切换"
     >
       <div style="flex: 1; text-align: center; font-size: 0.7rem">
-        {{ Base.ding ? "打开" : "关闭" }}
+        {{ Base.ding ? "切换" : "关闭" }}
       </div>
     </SlideItem>
     <p class="p-title">首页</p>
@@ -79,9 +79,30 @@ export default {
       edit: -1,
       isNew: false,
       text: "",
+      stoptimer:null
     };
   },
   methods: {
+    // Base.ding = true
+    switchDing() {
+      this.Base.ding = true;
+      let old = Number(localStorage.getItem("sound")) || 0;
+      let newindex = old + 1 > 2 ? 0 : old + 1;
+      localStorage.setItem("sound", newindex);
+      sound.stop();
+      sound = new Howl({
+        src: [`/sound/${sound_list[newindex]}`],
+        html5: true,
+        volume: 1,
+      });
+      playsound();
+      if (this.stoptimer) {
+        clearTimeout(this.stoptimer);
+      }
+      this.stoptimer = setTimeout(() => {
+        sound.stop();
+      }, 5000);
+    },
     goHome() {
       this.$router.push("/");
     },
